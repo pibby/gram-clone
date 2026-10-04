@@ -37,7 +37,7 @@ Requirements: Node 22+ and a Postgres database (13 or newer).
 npm install
 cp .env.example .env.local   # then fill in DATABASE_URL, ADMIN_PASSWORD, SESSION_SECRET
 npm run db:migrate           # creates the tables (safe to re-run)
-npm run dev                  # http://localhost:3000
+npm run dev                  # http://localhost:3200
 ```
 
 To create posts, go to **/admin** and sign in with `ADMIN_PASSWORD`. Once you're signed in, a **New post** button also appears in the top bar.
