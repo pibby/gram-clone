@@ -1,4 +1,8 @@
-/** Profile shown in the top bar and on posts. Each value can be overridden with an env var. */
+/**
+ * Profile shown in the top bar and on posts. Each value can be overridden with an env var.
+ * The bio is edited in /admin and stored in the database; this one is only the default
+ * until a bio has been saved (see lib/profile.ts).
+ */
 export const site = {
   name: process.env.SITE_NAME || "Katie Harron",
   bio:

@@ -14,6 +14,6 @@ export async function connectTestDb() {
   await sql.unsafe(schema);
   return {
     sql,
-    reset: () => sql`truncate media, posts restart identity cascade`,
+    reset: () => sql`truncate media, posts, profile restart identity cascade`,
   };
 }

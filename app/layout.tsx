@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getStats, getTopTags } from "@/lib/posts";
+import { getBio } from "@/lib/profile";
 import { isAdmin } from "@/lib/session";
 import { site } from "@/lib/site";
 import { Avatar } from "./components/Avatar";
@@ -11,11 +12,13 @@ import "./globals.css";
 
 const sans = Geist({ variable: "--font-geist", subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: { default: site.name, template: `%s · ${site.name}` },
-  description: site.bio,
-  openGraph: { images: [{ url: site.avatar.src2x, width: 192, height: 192 }] },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: { default: site.name, template: `%s · ${site.name}` },
+    description: (await getBio()) || undefined,
+    openGraph: { images: [{ url: site.avatar.src2x, width: 192, height: 192 }] },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#000000",
@@ -25,7 +28,7 @@ export const viewport: Viewport = {
 const compact = new Intl.NumberFormat("en", { notation: "compact" });
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [stats, admin, tags] = await Promise.all([getStats(), isAdmin(), getTopTags(30)]);
+  const [stats, admin, tags, bio] = await Promise.all([getStats(), isAdmin(), getTopTags(30), getBio()]);
 
   return (
     <html lang="en" className={sans.variable}>
@@ -53,7 +56,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                 New post
               </Link>
             )}
-            {site.bio && <p className="topbar__bio">{site.bio}</p>}
+            {bio && <p className="topbar__bio">{bio}</p>}
           </div>
           <Suspense>
             <TagBar tags={tags} />

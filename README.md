@@ -42,7 +42,7 @@ npm run dev                  # http://localhost:3200
 
 To create posts, go to **/admin** and sign in with `ADMIN_PASSWORD`. Once you're signed in, a **New post** button also appears in the top bar.
 
-Your name, bio and avatar have defaults in `lib/site.ts`, and each can be overridden with an env var (see `.env.example`).
+Edit your **bio** in **/admin → Profile**; it's stored in the database. Your name and avatar are set in `lib/site.ts` and can be overridden with env vars (see `.env.example`). The bio in `lib/site.ts` is only used until you've saved one.
 
 ## How media is stored
 

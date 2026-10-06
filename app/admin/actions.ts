@@ -3,10 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createPost, deletePost, deleteUnpostedMedia, updatePost } from "@/lib/posts";
+import { updateBio } from "@/lib/profile";
 import { checkPassword, endAdminSession, isAdmin, startAdminSession } from "@/lib/session";
 import { deleteFiles } from "@/lib/storage";
 import { normalizeTags } from "@/lib/types";
-import { cleanAlt, cleanCaption, cleanDate, cleanDraft, cleanLocation, type DraftInput } from "@/lib/validate";
+import { cleanAlt, cleanBio, cleanCaption, cleanDate, cleanDraft, cleanLocation, type DraftInput } from "@/lib/validate";
 
 export type LoginState = { error?: string };
 
@@ -69,4 +70,18 @@ export async function removePost(id: number) {
   const files = await deletePost(Number(id));
   await Promise.all(files.map((f) => deleteFiles(f.file_key, f.widths)));
   revalidatePath("/", "layout");
+}
+
+export type ProfileState = { status: "idle" | "saved" | "error"; bio?: string };
+
+export async function saveProfile(_prev: ProfileState, form: FormData): Promise<ProfileState> {
+  await requireAdmin();
+  const bio = cleanBio(form.get("bio"));
+  try {
+    await updateBio(bio);
+  } catch {
+    return { status: "error", bio };
+  }
+  revalidatePath("/", "layout");
+  return { status: "saved", bio };
 }

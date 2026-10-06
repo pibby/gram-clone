@@ -11,6 +11,14 @@ export type DraftInput = {
 export const cleanCaption = (v: unknown) => String(v ?? "").trim().slice(0, 2200);
 export const cleanLocation = (v: unknown) => String(v ?? "").trim().replace(/\s+/g, " ").slice(0, 120);
 export const cleanAlt = (v: unknown) => String(v ?? "").trim().slice(0, 1000);
+export const MAX_BIO_LENGTH = 500;
+/** Trims, normalizes line endings and collapses runs of blank lines. */
+export const cleanBio = (v: unknown) =>
+  String(v ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+    .slice(0, MAX_BIO_LENGTH);
 
 /** A valid YYYY-MM-DD calendar date, or today's (server) date. */
 export function cleanDate(value: unknown, today = new Date()) {

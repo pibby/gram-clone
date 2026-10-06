@@ -214,6 +214,8 @@ select {
 
 .topbar__bio {
   grid-area: bio;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
   font-size: 14px;
   line-height: 1.4;
   color: #d4d4d4;
@@ -1194,6 +1196,12 @@ video.lightbox__media {
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.form__status {
+  flex: 1;
+  margin: 0;
+  align-self: center;
 }
 
 .form__error {

@@ -32,3 +32,11 @@ create table if not exists media (
 
 create index if not exists media_post_idx on media (post_id, position);
 create index if not exists media_unposted_idx on media (created_at) where post_id is null;
+
+-- Site profile, edited from /admin. A single row (id is always true).
+-- While the row doesn't exist, the defaults in lib/site.ts are used.
+create table if not exists profile (
+  id         boolean     primary key default true check (id),
+  bio        text        not null default '',
+  updated_at timestamptz not null default now()
+);

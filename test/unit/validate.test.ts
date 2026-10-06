@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { cleanDate, cleanDraft, cleanLocation } from "@/lib/validate";
+import { MAX_BIO_LENGTH, cleanBio, cleanDate, cleanDraft, cleanLocation } from "@/lib/validate";
 
 describe("cleanDate", () => {
   const today = new Date("2026-10-04T12:00:00Z");
@@ -47,5 +47,17 @@ describe("cleanDraft", () => {
 
   it("limits location length", () => {
     expect(cleanLocation("x".repeat(500))).toHaveLength(120);
+  });
+});
+
+describe("cleanBio", () => {
+  it("trims, normalizes line endings and collapses blank lines", () => {
+    expect(cleanBio("  Hello\r\nworld\r\n\r\n\r\n\r\nBye  ")).toBe("Hello\nworld\n\nBye");
+  });
+
+  it("allows an empty bio and caps the length", () => {
+    expect(cleanBio("   ")).toBe("");
+    expect(cleanBio(undefined)).toBe("");
+    expect(cleanBio("x".repeat(900))).toHaveLength(MAX_BIO_LENGTH);
   });
 });

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPostPage, getUnpostedMedia } from "@/lib/posts";
+import { getBio } from "@/lib/profile";
 import { isAdmin } from "@/lib/session";
 import { formatDate, pickWidth, variantUrl } from "@/lib/types";
 import { logout, savePost } from "./actions";
 import { Composer } from "./Composer";
 import { DeletePostButton } from "./DeletePostButton";
 import { LoginForm } from "./LoginForm";
+import { ProfileForm } from "./ProfileForm";
 
 export const metadata: Metadata = { title: "Manage", robots: { index: false } };
 
@@ -36,7 +38,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
     );
   }
 
-  const [{ posts }, unposted] = await Promise.all([getPostPage({ limit: 50 }), getUnpostedMedia()]);
+  const [{ posts }, unposted, bio] = await Promise.all([getPostPage({ limit: 50 }), getUnpostedMedia(), getBio()]);
 
   return (
     <div className="admin">
@@ -61,6 +63,13 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
           </p>
         )}
         <Composer initial={unposted} />
+      </section>
+
+      <section className="panel" aria-labelledby="profile-title">
+        <h2 id="profile-title" className="panel__title">
+          Profile
+        </h2>
+        <ProfileForm bio={bio} />
       </section>
 
       <section aria-labelledby="recent-title" className="admin__recent">
