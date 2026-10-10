@@ -17,6 +17,7 @@ A personal, Instagram-style photo and video feed. It runs on Next.js 16 and Post
   2. otherwise Android file names such as `PXL_20240512_183022.jpg`,
   3. otherwise the file's modified time.
 - **Android share target:** install the site to your home screen, then share from Google Photos straight into your drafts.
+- The **bio** in the top bar is edited in **/admin → Profile** and stored in the database. It is no longer hardcoded. The default in `lib/site.ts` is only used until you save one.
 - Dark mode, responsive (phone, tablet and desktop), keyboard and screen-reader friendly, and it respects reduced motion.
 
 ### Accessibility notes
@@ -81,8 +82,8 @@ TEST_DATABASE_URL=postgres://localhost/gram_test npm test
 | Folder | What it covers |
 | --- | --- |
 | `test/unit` | Capture-date parsing, draft grouping, pagination, tags/formatting, validation, HTTP ranges |
-| `test/components` | Feed (lightbox, URL sync), PostCard/carousel (dots, keyboard), Lightbox, TagBar, Pagination, bulk Composer (grouping, backdating, alt text) |
-| `test/integration` | Posts, 15-per-page paging (incl. tags) against Postgres; sharp/ffmpeg processing; `/media` route |
+| `test/components` | Feed (lightbox, URL sync), PostCard/carousel (dots, keyboard), Lightbox, TagBar, Pagination, bulk Composer (grouping, backdating, alt text), ProfileForm |
+| `test/integration` | Posts, 15-per-page paging (incl. tags) against Postgres; sharp/ffmpeg processing; `/media` route; profile bio |
 
 ## Project layout
 
@@ -92,12 +93,14 @@ app/
   p/[id]/page.tsx        a single post on its own page
   layout.tsx             top bar: profile, post count, tag bar
   components/            Feed, PostCard, Carousel, Lightbox, TagBar, Pagination, Avatar, …
-  admin/                 sign-in, bulk composer, post editor (server actions)
+  admin/                 sign-in, bulk composer, profile bio, post editor (server actions)
   api/media/route.ts     upload endpoint (one file per request)
   share/route.ts         Android share target
   media/[file]/route.ts  serves stored files (with Range support)
 lib/
   posts.ts               all SQL
+  profile.ts             bio stored in the database
+  site.ts                name, avatar, default bio until one is saved
   storage.ts             sharp + ffmpeg processing
   ingest.ts              upload → processed media + capture date
   capture-date.ts        EXIF / filename / mtime date detection
